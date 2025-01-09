@@ -1,14 +1,10 @@
 require('dotenv').config();
-// const { Bot } = require("grammy");
-// const { run } = require("@grammyjs/runner");
-const { Telegraf } = require('telegraf')
+const { Telegraf } = require('telegraf');
+const { getDoorStatus, openDoor } = require('./doorlock');
 
 let telegram_api_key = process.env["TELEGRAM_BOT"]
 let allow_chat_ids = process.env["ALLOW_CHAT_ID"].split(',');
 let allow_usernames = process.env["ALLOW_USERNAME"].split(',');
-let sesame_id      = process.env["SESAME_ID"]  // uuid
-let key_secret_hex = process.env["KEY_SECRET_HEX"]
-let api_key        = process.env["API_KEY"]
 
 /**
  * 檢查是否授權開門
@@ -39,11 +35,22 @@ const bot = new Telegraf(telegram_api_key); // <-- put your bot token between th
 
 
 bot.command(["opendoor", "dooropen"], (ctx) => {
+    let callUsername = ctx.from.username;
     let isAllow = checkFrom(ctx);
 
     if (isAllow) {
-        // TODO; 開門
-        
+        // 開門
+        // TODO: 待測試
+        openDoor().then((res) => {
+            // console.log(res.data);
+            // ctx.reply(JSON.stringify(res.data, null, ' '));
+            ctx.reply("@"+callUsername+" 已打開MozTW門(11樓)")
+        })
+        .catch((error) => {
+            let status = error.response.status;
+            let data = error.response.data;
+            ctx.reply(status+"錯誤: "+data);
+        });
     } else {
         ctx.reply("非請勿入！")
     }
@@ -53,7 +60,17 @@ bot.command(["doorstatus"], (ctx) => {
     let isAllow = checkFrom(ctx);
 
     if (isAllow) {
-        // TODO; 取得門鎖狀態   
+        // 取得門鎖狀態   
+        getDoorStatus().then((res) => {
+            // console.log(res.data);
+            ctx.reply(JSON.stringify(res.data, null, ' '));
+
+        })
+        .catch((error) => {
+            let status = error.response.status;
+            let data = error.response.data;
+            ctx.reply(status+"錯誤: "+data);
+        });
     } else {
         ctx.reply("非請勿入！")
     }

@@ -1,4 +1,4 @@
-摩滋工寮 開門機器人
+摩茲工寮 開門機器人
 ===
 
 username: moztw_doorlock_bot

@@ -101,7 +101,8 @@ bot.command("debug", (ctx) => {
 });
 
 // Handle other messages.
-bot.on("message", (ctx) => ctx.reply("這不是門神能處理的事～"));
+// TODO: 此行會造成在群裡拉人的時候，機器人一直亂送這條訊息，先註解掉
+// bot.on("message", (ctx) => ctx.reply("這不是門神能處理的事～"));
 
 
 bot.launch().catch(err => {

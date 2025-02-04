@@ -3,6 +3,7 @@ const { Telegraf } = require('telegraf');
 const { getDoorStatus, openDoor } = require('./doorlock');
 
 let telegram_api_key = process.env["TELEGRAM_BOT"]
+let is_force_allow_in_chat = Boolean(process.env["FORCE_ALLOW_IN_CHAT"]);
 let allow_chat_ids = process.env["ALLOW_CHAT_ID"].split(',');
 let allow_usernames = process.env["ALLOW_USERNAME"].split(',');
 
@@ -18,8 +19,8 @@ function checkFrom(ctx) {
     if (!allow_chat_ids.includes(callChatId.toString())) {
         return false;
     }
-    // 不允許的使用者
-    else if (!allow_usernames.includes(callUsername)){
+    // 不允許的使用者，而且也沒開強制聊天室內成員直接允許的話
+    else if (!allow_usernames.includes(callUsername) & !is_force_allow_in_chat){
         return false;
     }
     else {

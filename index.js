@@ -3,7 +3,7 @@ const { Telegraf } = require('telegraf');
 const { getDoorStatus, openDoor } = require('./doorlock');
 
 let telegram_api_key = process.env["TELEGRAM_BOT"]
-let is_force_allow_in_chat = Boolean(process.env["FORCE_ALLOW_IN_CHAT"]);
+let is_force_allow_in_chat = Boolean(parseInt(process.env["FORCE_ALLOW_IN_CHAT"]));
 let allow_chat_ids = process.env["ALLOW_CHAT_ID"].split(',');
 let allow_usernames = process.env["ALLOW_USERNAME"].split(',');
 
